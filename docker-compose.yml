@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: stripe-payments-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: stripe
+      POSTGRES_PASSWORD: stripe
+      POSTGRES_DB: stripe_payments
+    ports:
+      - "5432:5432"
+    volumes:
+      - stripe-payments-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stripe -d stripe_payments"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  stripe-payments-db-data:
