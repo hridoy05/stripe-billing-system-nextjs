@@ -50,6 +50,12 @@ export default function Home() {
           >
             Sign in
           </Link>
+          <Link
+            href="/products"
+            className="flex h-12 items-center justify-center rounded-full border border-black/[.08] px-6 text-base font-medium transition-colors hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
+          >
+            Browse products
+          </Link>
         </div>
         <div className="grid w-full grid-cols-1 gap-4 pt-8 text-left sm:grid-cols-2">
           {features.map((feature) => (
