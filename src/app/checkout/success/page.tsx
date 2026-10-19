@@ -4,22 +4,24 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getStripe } from "@/lib/stripe";
 import { getProduct } from "@/lib/products";
-import { getPurchaseBySessionId } from "@/lib/db";
+import {
+  getPurchaseBySessionId,
+  getPurchaseByPaymentIntent,
+} from "@/lib/db";
 import { PaymentConfirmation } from "./payment-confirmation";
 
 type Props = {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{ session_id?: string; payment_intent?: string }>;
 };
 
-async function Result({
-  searchParams,
-}: Props) {
-  const { session_id: sessionId } = await searchParams;
+async function Result({ searchParams }: Props) {
+  const { session_id: sessionId, payment_intent: paymentIntentId } =
+    await searchParams;
 
-  if (!sessionId) {
+  if (!sessionId && !paymentIntentId) {
     return (
       <>
-        <h1 className="text-2xl font-semibold">Missing checkout session</h1>
+        <h1 className="text-2xl font-semibold">Missing payment reference</h1>
         <Link href="/products" className="text-sm underline">
           Back to products
         </Link>
@@ -33,22 +35,34 @@ async function Result({
   let paid = false;
   try {
     const stripe = getStripe();
-    const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
-    paid =
-      checkoutSession.payment_status === "paid" ||
-      checkoutSession.status === "complete";
+    if (sessionId) {
+      const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
+      paid =
+        checkoutSession.payment_status === "paid" ||
+        checkoutSession.status === "complete";
+    } else if (paymentIntentId) {
+      const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      paid = intent.status === "succeeded";
+    }
   } catch {
     // Fall through and let the webhook confirm the payment.
   }
 
-  const purchase = await getPurchaseBySessionId(sessionId);
+  const purchase = sessionId
+    ? await getPurchaseBySessionId(sessionId)
+    : await getPurchaseByPaymentIntent(paymentIntentId!);
   const status = paid && purchase ? "purchased" : "pending";
   const productSlug = purchase ? getProduct(purchase.productId)?.slug : null;
 
   return (
     <div className="flex flex-col items-center gap-6 text-center">
       <h1 className="text-2xl font-semibold">Thank you for your purchase!</h1>
-      <PaymentConfirmation sessionId={sessionId} initialStatus={status} />
+      <PaymentConfirmation
+        purchaseRef={
+          sessionId ? { sessionId } : { paymentIntentId: paymentIntentId! }
+        }
+        initialStatus={status}
+      />
       {productSlug ? (
         <Link
           href={`/products/${productSlug}`}

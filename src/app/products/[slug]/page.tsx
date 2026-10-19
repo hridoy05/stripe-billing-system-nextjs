@@ -71,10 +71,24 @@ async function ProductDetail({ params, searchParams }: Props) {
             </div>
           </div>
         ) : (
-          <form action={startCheckout} className="mt-6">
-            <input type="hidden" name="productId" value={product.id} />
+          <div className="mt-6">
             {session ? (
-              <BuyButton />
+              <>
+                <form action={startCheckout}>
+                  <input type="hidden" name="productId" value={product.id} />
+                  <BuyButton />
+                </form>
+                <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+                  or{" "}
+                  <Link
+                    href={`/checkout/custom/${product.slug}`}
+                    className="underline"
+                  >
+                    pay in app with the custom card form
+                  </Link>{" "}
+                  (Stripe Elements + PaymentIntent)
+                </p>
+              </>
             ) : (
               <Link
                 href="/login"
@@ -83,7 +97,7 @@ async function ProductDetail({ params, searchParams }: Props) {
                 Sign in to purchase
               </Link>
             )}
-          </form>
+          </div>
         )}
       </div>
     </>

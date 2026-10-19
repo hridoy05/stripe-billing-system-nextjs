@@ -205,7 +205,7 @@ export type PurchaseGroupByOutputType = {
   id: bigint
   userId: string
   productId: string
-  stripeSessionId: string
+  stripeSessionId: string | null
   stripePaymentIntent: string | null
   amountCents: number
   currency: string
@@ -239,7 +239,7 @@ export type PurchaseWhereInput = {
   id?: Prisma.BigIntFilter<"Purchase"> | bigint | number
   userId?: Prisma.StringFilter<"Purchase"> | string
   productId?: Prisma.StringFilter<"Purchase"> | string
-  stripeSessionId?: Prisma.StringFilter<"Purchase"> | string
+  stripeSessionId?: Prisma.StringNullableFilter<"Purchase"> | string | null
   stripePaymentIntent?: Prisma.StringNullableFilter<"Purchase"> | string | null
   amountCents?: Prisma.IntFilter<"Purchase"> | number
   currency?: Prisma.StringFilter<"Purchase"> | string
@@ -250,7 +250,7 @@ export type PurchaseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  stripeSessionId?: Prisma.SortOrder
+  stripeSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripePaymentIntent?: Prisma.SortOrderInput | Prisma.SortOrder
   amountCents?: Prisma.SortOrder
   currency?: Prisma.SortOrder
@@ -260,22 +260,22 @@ export type PurchaseOrderByWithRelationInput = {
 export type PurchaseWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   stripeSessionId?: string
+  stripePaymentIntent?: string
   AND?: Prisma.PurchaseWhereInput | Prisma.PurchaseWhereInput[]
   OR?: Prisma.PurchaseWhereInput[]
   NOT?: Prisma.PurchaseWhereInput | Prisma.PurchaseWhereInput[]
   userId?: Prisma.StringFilter<"Purchase"> | string
   productId?: Prisma.StringFilter<"Purchase"> | string
-  stripePaymentIntent?: Prisma.StringNullableFilter<"Purchase"> | string | null
   amountCents?: Prisma.IntFilter<"Purchase"> | number
   currency?: Prisma.StringFilter<"Purchase"> | string
   createdAt?: Prisma.DateTimeFilter<"Purchase"> | Date | string
-}, "id" | "stripeSessionId">
+}, "id" | "stripeSessionId" | "stripePaymentIntent">
 
 export type PurchaseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  stripeSessionId?: Prisma.SortOrder
+  stripeSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripePaymentIntent?: Prisma.SortOrderInput | Prisma.SortOrder
   amountCents?: Prisma.SortOrder
   currency?: Prisma.SortOrder
@@ -294,7 +294,7 @@ export type PurchaseScalarWhereWithAggregatesInput = {
   id?: Prisma.BigIntWithAggregatesFilter<"Purchase"> | bigint | number
   userId?: Prisma.StringWithAggregatesFilter<"Purchase"> | string
   productId?: Prisma.StringWithAggregatesFilter<"Purchase"> | string
-  stripeSessionId?: Prisma.StringWithAggregatesFilter<"Purchase"> | string
+  stripeSessionId?: Prisma.StringNullableWithAggregatesFilter<"Purchase"> | string | null
   stripePaymentIntent?: Prisma.StringNullableWithAggregatesFilter<"Purchase"> | string | null
   amountCents?: Prisma.IntWithAggregatesFilter<"Purchase"> | number
   currency?: Prisma.StringWithAggregatesFilter<"Purchase"> | string
@@ -305,7 +305,7 @@ export type PurchaseCreateInput = {
   id?: bigint | number
   userId: string
   productId: string
-  stripeSessionId: string
+  stripeSessionId?: string | null
   stripePaymentIntent?: string | null
   amountCents: number
   currency: string
@@ -316,7 +316,7 @@ export type PurchaseUncheckedCreateInput = {
   id?: bigint | number
   userId: string
   productId: string
-  stripeSessionId: string
+  stripeSessionId?: string | null
   stripePaymentIntent?: string | null
   amountCents: number
   currency: string
@@ -327,7 +327,7 @@ export type PurchaseUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  stripeSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountCents?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -338,7 +338,7 @@ export type PurchaseUncheckedUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  stripeSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountCents?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -349,7 +349,7 @@ export type PurchaseCreateManyInput = {
   id?: bigint | number
   userId: string
   productId: string
-  stripeSessionId: string
+  stripeSessionId?: string | null
   stripePaymentIntent?: string | null
   amountCents: number
   currency: string
@@ -360,7 +360,7 @@ export type PurchaseUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  stripeSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountCents?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -371,7 +371,7 @@ export type PurchaseUncheckedUpdateManyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  stripeSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountCents?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -504,7 +504,7 @@ export type $PurchasePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: bigint
     userId: string
     productId: string
-    stripeSessionId: string
+    stripeSessionId: string | null
     stripePaymentIntent: string | null
     amountCents: number
     currency: string

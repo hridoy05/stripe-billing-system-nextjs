@@ -1,12 +1,18 @@
 "use server";
 
-import { getPurchaseBySessionId } from "@/lib/db";
+import {
+  getPurchaseBySessionId,
+  getPurchaseByPaymentIntent,
+} from "@/lib/db";
 
 export type PurchaseStatus = "pending" | "purchased";
 
-export async function getPurchaseStatus(
-  sessionId: string
-): Promise<PurchaseStatus> {
-  const purchase = await getPurchaseBySessionId(sessionId);
+export type PurchaseRef = { sessionId: string } | { paymentIntentId: string };
+
+export async function getPurchaseStatus(ref: PurchaseRef): Promise<PurchaseStatus> {
+  const purchase =
+    "sessionId" in ref
+      ? await getPurchaseBySessionId(ref.sessionId)
+      : await getPurchaseByPaymentIntent(ref.paymentIntentId);
   return purchase ? "purchased" : "pending";
 }

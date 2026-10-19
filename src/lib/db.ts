@@ -70,6 +70,22 @@ export async function getPurchaseBySessionId(
   };
 }
 
+export async function getPurchaseByPaymentIntent(
+  paymentIntentId: string
+): Promise<PurchaseRecord | null> {
+  const row = await prisma.purchase.findUnique({
+    where: { stripePaymentIntent: paymentIntentId },
+    select: { productId: true, amountCents: true, currency: true, createdAt: true },
+  });
+  if (!row) return null;
+  return {
+    productId: row.productId,
+    amountCents: row.amountCents,
+    currency: row.currency,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
 export async function listPurchasesForUser(
   userId: string
 ): Promise<PurchaseRecord[]> {
@@ -87,14 +103,14 @@ export async function listPurchasesForUser(
 }
 
 /**
- * Inserts a purchase row exactly once per checkout session.
+ * Inserts a purchase row exactly once per checkout session or payment intent.
  * Returns true if this call is the one that created the record,
- * false when the session was already recorded (idempotent replay).
+ * false when the payment was already recorded (idempotent replay).
  */
 export async function insertPurchase(input: {
   userId: string;
   productId: string;
-  stripeSessionId: string;
+  stripeSessionId: string | null;
   stripePaymentIntent: string | null;
   amountCents: number;
   currency: string;
@@ -115,6 +131,21 @@ export async function insertPurchase(input: {
     if (isUniqueConstraintViolation(error)) return false;
     throw error;
   }
+}
+
+/**
+ * When payment_intent.succeeded arrives before checkout.session.completed,
+ * the row is created without a session id. This backfills it so the hosted
+ * Checkout success page can still look the purchase up by session id.
+ */
+export async function attachSessionIdToPurchase(
+  paymentIntentId: string,
+  sessionId: string
+): Promise<void> {
+  await prisma.purchase.updateMany({
+    where: { stripePaymentIntent: paymentIntentId, stripeSessionId: null },
+    data: { stripeSessionId: sessionId },
+  });
 }
 
 /**

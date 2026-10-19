@@ -1,6 +1,10 @@
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
-import { claimWebhookEvent, insertPurchase } from "@/lib/db";
+import {
+  claimWebhookEvent,
+  insertPurchase,
+  attachSessionIdToPurchase,
+} from "@/lib/db";
 
 export async function POST(request: Request) {
   const stripe = getStripe();
@@ -49,21 +53,62 @@ export async function POST(request: Request) {
       return Response.json({ received: true }, { status: 200 });
     }
 
+    const paymentIntentId =
+      typeof session.payment_intent === "string" ? session.payment_intent : null;
+
+    try {
+      const created = await insertPurchase({
+        userId,
+        productId,
+        stripeSessionId: session.id,
+        stripePaymentIntent: paymentIntentId,
+        amountCents: session.amount_total ?? 0,
+        currency: session.currency ?? "usd",
+      });
+      if (!created && paymentIntentId) {
+        // payment_intent.succeeded already recorded this purchase; link the session id.
+        await attachSessionIdToPurchase(paymentIntentId, session.id);
+      }
+      console.log(`Purchase recorded: user=${userId} product=${productId}`);
+    } catch (error) {
+      console.error("Failed to record purchase:", error);
+      return Response.json({ error: "Database failure" }, { status: 500 });
+    }
+  }
+
+  if (event.type === "payment_intent.succeeded") {
+    const intent = event.data.object;
+
+    const { userId, productId } = intent.metadata ?? {};
+    if (!userId || !productId) {
+      console.error(
+        `Missing metadata on payment intent ${intent.id}: cannot record purchase`
+      );
+      return Response.json({ received: true }, { status: 200 });
+    }
+
     try {
       await insertPurchase({
         userId,
         productId,
-        stripeSessionId: session.id,
-        stripePaymentIntent:
-          typeof session.payment_intent === "string" ? session.payment_intent : null,
-        amountCents: session.amount_total ?? 0,
-        currency: session.currency ?? "usd",
+        stripeSessionId: null,
+        stripePaymentIntent: intent.id,
+        amountCents: intent.amount_received,
+        currency: intent.currency,
       });
       console.log(`Purchase recorded: user=${userId} product=${productId}`);
     } catch (error) {
       console.error("Failed to record purchase:", error);
       return Response.json({ error: "Database failure" }, { status: 500 });
     }
+  }
+
+  if (event.type === "payment_intent.payment_failed") {
+    const intent = event.data.object;
+    const message = intent.last_payment_error?.message ?? "Unknown reason";
+    console.log(
+      `Payment failed: intent=${intent.id} reason="${message}" — no purchase recorded`
+    );
   }
 
   return Response.json({ received: true });

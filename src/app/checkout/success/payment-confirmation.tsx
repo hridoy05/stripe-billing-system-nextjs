@@ -2,13 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPurchaseStatus, type PurchaseStatus } from "@/app/actions/purchases";
+import {
+  getPurchaseStatus,
+  type PurchaseRef,
+  type PurchaseStatus,
+} from "@/app/actions/purchases";
 
 export function PaymentConfirmation({
-  sessionId,
+  purchaseRef,
   initialStatus,
 }: {
-  sessionId: string;
+  purchaseRef: PurchaseRef;
   initialStatus: PurchaseStatus;
 }) {
   const router = useRouter();
@@ -24,7 +28,7 @@ export function PaymentConfirmation({
       for (let i = 0; i < attempts; i++) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         if (cancelled) return;
-        const next = await getPurchaseStatus(sessionId);
+        const next = await getPurchaseStatus(purchaseRef);
         if (cancelled) return;
         if (next === "purchased") {
           setStatus("purchased");
@@ -37,7 +41,7 @@ export function PaymentConfirmation({
     return () => {
       cancelled = true;
     };
-  }, [sessionId, status, router]);
+  }, [purchaseRef, status, router]);
 
   if (status === "purchased") {
     return (

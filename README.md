@@ -1,5 +1,45 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Payment flows
+
+The app supports two ways to buy the same products, both settled by verified
+Stripe webhooks (never by trusting the browser redirect):
+
+### 1. Hosted Checkout (branch `feat/01-one-time-hosted-checkout`)
+
+- Product page → server action creates a **Checkout Session** → browser is
+  redirected to Stripe-hosted payment page → redirect back to
+  `/checkout/success?session_id=...`.
+- `checkout.session.completed` webhook records the purchase in PostgreSQL.
+
+### 2. Custom PaymentIntent (branch `feat/02-Custom-PaymentIntent`)
+
+- `/checkout/custom/[slug]` renders an in-app card form with **Stripe Elements
+  (Payment Element)**.
+- A server action creates a **PaymentIntent** (amount, currency, and
+  `userId`/`productId` metadata) and returns the `client_secret`.
+- The client confirms with `stripe.confirmPayment(...)`; 3D Secure challenges
+  run inline (`redirect: "if_required"`), with a `return_url` fallback for
+  full-redirect payment methods.
+- `payment_intent.succeeded` records the purchase;
+  `payment_intent.payment_failed` is logged and records nothing. Access is
+  granted only after the webhook-verified row exists — the UI polls
+  `getPurchaseStatus` rather than trusting the redirect.
+- Purchases are deduplicated by a unique constraint on the PaymentIntent id;
+  when both `checkout.session.completed` and `payment_intent.succeeded` fire
+  for the same hosted-checkout payment, only one row is created.
+
+### Comparison
+
+| | Hosted Checkout | Custom PaymentIntent |
+| --- | --- | --- |
+| UI | Stripe-hosted page | In-app form (Stripe Elements) |
+| Server object | Checkout Session | PaymentIntent |
+| Client integration | Redirect only | `@stripe/react-stripe-js` + `confirmPayment` |
+| 3DS | Handled by Stripe page | Inline challenge, `return_url` fallback |
+| Granting webhook | `checkout.session.completed` | `payment_intent.succeeded` |
+| Branding control | Limited | Full |
+
 ## Getting Started
 
 First, run the development server:
@@ -13,6 +53,19 @@ pnpm dev
 # or
 bun dev
 ```
+
+### Environment
+
+`.env.local` needs:
+
+- `DATABASE_URL` — PostgreSQL (see `docker-compose.yml`)
+- `SESSION_SECRET`, `AUTH_EMAIL`, `AUTH_PASSWORD`
+- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — required for the custom PaymentIntent
+  flow (`/checkout/custom/[slug]`)
+- The Stripe webhook endpoint must subscribe to `checkout.session.completed`,
+  `payment_intent.succeeded`, and `payment_intent.payment_failed`
+  (`stripe listen --forward-to localhost:3000/api/webhooks/stripe`).
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
