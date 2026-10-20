@@ -33,16 +33,21 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
   const paymentIntentId = clientSecret.split("_secret_")[0];
 
   const pollForPurchase = useCallback(async () => {
-    const attempts = 20;
-    for (let i = 0; i < attempts; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    // 10 fast attempts, then every 3s — gives the webhook ~50s to land before
+    // the UI gives up and lets the user retry manually.
+    const schedule = [
+      ...Array(10).fill(1000),
+      ...Array(15).fill(3000),
+    ] as const;
+    for (const interval of schedule) {
+      await new Promise((resolve) => setTimeout(resolve, interval));
       const status: PurchaseStatus = await getPurchaseStatus({
         paymentIntentId,
       });
       if (status === "purchased") {
         setSubmit({ status: "purchased" });
         router.refresh();
-        return;
+        return true;
       }
     }
     setSubmit({
@@ -50,6 +55,7 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       message:
         "Payment is still being verified. Check your dashboard in a moment.",
     });
+    return false;
   }, [paymentIntentId, router]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -111,7 +117,7 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
         <button
           type="button"
           onClick={() => router.refresh()}
-          className="mt-4 block text-sm underline"
+          className="mt-4 block cursor-pointer text-sm underline underline-offset-2 hover:opacity-80"
         >
           Continue
         </button>
@@ -124,15 +130,25 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       <PaymentElement />
 
       {submit.status === "error" ? (
-        <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-          {submit.message}
-        </p>
+        <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+          <p>{submit.message}</p>
+          <button
+            type="button"
+            onClick={() => {
+              setSubmit({ status: "verifying" });
+              pollForPurchase();
+            }}
+            className="mt-2 cursor-pointer underline opacity-80 hover:opacity-100"
+          >
+            Check again
+          </button>
+        </div>
       ) : null}
 
       <button
         type="submit"
         disabled={!stripe || !elements || submit.status !== "idle"}
-        className="mt-6 inline-flex h-10 w-full items-center justify-center rounded-full bg-foreground px-6 text-sm text-background disabled:opacity-50 dark:bg-background dark:text-foreground"
+        className="mt-6 inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-full bg-foreground px-6 text-sm text-background transition-colors hover:opacity-80 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-80 dark:bg-background dark:text-foreground"
       >
         {submit.status === "submitting"
           ? "Processing…"
