@@ -52,7 +52,10 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Purchase: 'Purchase',
-  StripeEvent: 'StripeEvent'
+  StripeEvent: 'StripeEvent',
+  StripeCustomer: 'StripeCustomer',
+  PaymentConsent: 'PaymentConsent',
+  SavedPaymentMethod: 'SavedPaymentMethod'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -91,6 +94,53 @@ export const StripeEventScalarFieldEnum = {
 } as const
 
 export type StripeEventScalarFieldEnum = (typeof StripeEventScalarFieldEnum)[keyof typeof StripeEventScalarFieldEnum]
+
+
+export const StripeCustomerScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  stripeCustomerId: 'stripeCustomerId',
+  defaultPaymentMethodId: 'defaultPaymentMethodId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StripeCustomerScalarFieldEnum = (typeof StripeCustomerScalarFieldEnum)[keyof typeof StripeCustomerScalarFieldEnum]
+
+
+export const PaymentConsentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  customerId: 'customerId',
+  setupIntentId: 'setupIntentId',
+  consentVersion: 'consentVersion',
+  consentText: 'consentText',
+  allowOffSession: 'allowOffSession',
+  acceptedAt: 'acceptedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+} as const
+
+export type PaymentConsentScalarFieldEnum = (typeof PaymentConsentScalarFieldEnum)[keyof typeof PaymentConsentScalarFieldEnum]
+
+
+export const SavedPaymentMethodScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  setupIntentId: 'setupIntentId',
+  consentId: 'consentId',
+  type: 'type',
+  brand: 'brand',
+  last4: 'last4',
+  expMonth: 'expMonth',
+  expYear: 'expYear',
+  billingName: 'billingName',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SavedPaymentMethodScalarFieldEnum = (typeof SavedPaymentMethodScalarFieldEnum)[keyof typeof SavedPaymentMethodScalarFieldEnum]
 
 
 export const SortOrder = {

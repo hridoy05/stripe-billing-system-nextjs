@@ -26,3 +26,59 @@ model StripeEvent {
 
   @@map("stripe_events")
 }
+
+model StripeCustomer {
+  id                     String   @id @default(cuid())
+  userId                 String   @unique @map("user_id")
+  stripeCustomerId       String   @unique @map("stripe_customer_id")
+  defaultPaymentMethodId String?  @map("default_payment_method_id")
+  createdAt              DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  paymentMethods SavedPaymentMethod[]
+  consents       PaymentConsent[]
+
+  @@map("stripe_customers")
+}
+
+model PaymentConsent {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  customerId      String   @map("customer_id")
+  setupIntentId   String?  @unique @map("setup_intent_id")
+  consentVersion  String   @map("consent_version")
+  consentText     String   @map("consent_text")
+  allowOffSession Boolean  @map("allow_off_session")
+  acceptedAt      DateTime @default(now()) @map("accepted_at") @db.Timestamptz(3)
+  ipAddress       String?  @map("ip_address")
+  userAgent       String?  @map("user_agent")
+
+  customer       StripeCustomer       @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  paymentMethods SavedPaymentMethod[]
+
+  @@index([userId])
+  @@index([customerId])
+  @@map("payment_consents")
+}
+
+model SavedPaymentMethod {
+  id            String   @id
+  customerId    String   @map("customer_id")
+  setupIntentId String?  @unique @map("setup_intent_id")
+  consentId     String?  @map("consent_id")
+  type          String
+  brand         String?
+  last4         String?
+  expMonth      Int?     @map("exp_month")
+  expYear       Int?     @map("exp_year")
+  billingName   String?  @map("billing_name")
+  isDefault     Boolean  @default(false) @map("is_default")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  customer StripeCustomer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  consent  PaymentConsent? @relation(fields: [consentId], references: [id], onDelete: SetNull)
+
+  @@index([customerId])
+  @@map("saved_payment_methods")
+}

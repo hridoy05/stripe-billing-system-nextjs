@@ -398,7 +398,10 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Purchase: 'Purchase',
-  StripeEvent: 'StripeEvent'
+  StripeEvent: 'StripeEvent',
+  StripeCustomer: 'StripeCustomer',
+  PaymentConsent: 'PaymentConsent',
+  SavedPaymentMethod: 'SavedPaymentMethod'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "purchase" | "stripeEvent"
+    modelProps: "purchase" | "stripeEvent" | "stripeCustomer" | "paymentConsent" | "savedPaymentMethod"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -566,6 +569,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    StripeCustomer: {
+      payload: Prisma.$StripeCustomerPayload<ExtArgs>
+      fields: Prisma.StripeCustomerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StripeCustomerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StripeCustomerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>
+        }
+        findFirst: {
+          args: Prisma.StripeCustomerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StripeCustomerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>
+        }
+        findMany: {
+          args: Prisma.StripeCustomerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>[]
+        }
+        create: {
+          args: Prisma.StripeCustomerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>
+        }
+        createMany: {
+          args: Prisma.StripeCustomerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StripeCustomerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>[]
+        }
+        delete: {
+          args: Prisma.StripeCustomerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>
+        }
+        update: {
+          args: Prisma.StripeCustomerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>
+        }
+        deleteMany: {
+          args: Prisma.StripeCustomerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StripeCustomerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StripeCustomerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>[]
+        }
+        upsert: {
+          args: Prisma.StripeCustomerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StripeCustomerPayload>
+        }
+        aggregate: {
+          args: Prisma.StripeCustomerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStripeCustomer>
+        }
+        groupBy: {
+          args: Prisma.StripeCustomerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StripeCustomerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StripeCustomerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StripeCustomerCountAggregateOutputType> | number
+        }
+      }
+    }
+    PaymentConsent: {
+      payload: Prisma.$PaymentConsentPayload<ExtArgs>
+      fields: Prisma.PaymentConsentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentConsentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentConsentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentConsentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentConsentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentConsentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentConsentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentConsentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentConsentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentConsentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>
+        }
+        update: {
+          args: Prisma.PaymentConsentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentConsentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentConsentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentConsentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentConsentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentConsentPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentConsentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentConsent>
+        }
+        groupBy: {
+          args: Prisma.PaymentConsentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentConsentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentConsentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentConsentCountAggregateOutputType> | number
+        }
+      }
+    }
+    SavedPaymentMethod: {
+      payload: Prisma.$SavedPaymentMethodPayload<ExtArgs>
+      fields: Prisma.SavedPaymentMethodFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedPaymentMethodFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedPaymentMethodFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>
+        }
+        findFirst: {
+          args: Prisma.SavedPaymentMethodFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedPaymentMethodFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>
+        }
+        findMany: {
+          args: Prisma.SavedPaymentMethodFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>[]
+        }
+        create: {
+          args: Prisma.SavedPaymentMethodCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>
+        }
+        createMany: {
+          args: Prisma.SavedPaymentMethodCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedPaymentMethodCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>[]
+        }
+        delete: {
+          args: Prisma.SavedPaymentMethodDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>
+        }
+        update: {
+          args: Prisma.SavedPaymentMethodUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedPaymentMethodDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedPaymentMethodUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedPaymentMethodUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedPaymentMethodUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPaymentMethodPayload>
+        }
+        aggregate: {
+          args: Prisma.SavedPaymentMethodAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedPaymentMethod>
+        }
+        groupBy: {
+          args: Prisma.SavedPaymentMethodGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedPaymentMethodGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedPaymentMethodCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedPaymentMethodCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -625,6 +850,53 @@ export const StripeEventScalarFieldEnum = {
 } as const
 
 export type StripeEventScalarFieldEnum = (typeof StripeEventScalarFieldEnum)[keyof typeof StripeEventScalarFieldEnum]
+
+
+export const StripeCustomerScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  stripeCustomerId: 'stripeCustomerId',
+  defaultPaymentMethodId: 'defaultPaymentMethodId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StripeCustomerScalarFieldEnum = (typeof StripeCustomerScalarFieldEnum)[keyof typeof StripeCustomerScalarFieldEnum]
+
+
+export const PaymentConsentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  customerId: 'customerId',
+  setupIntentId: 'setupIntentId',
+  consentVersion: 'consentVersion',
+  consentText: 'consentText',
+  allowOffSession: 'allowOffSession',
+  acceptedAt: 'acceptedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+} as const
+
+export type PaymentConsentScalarFieldEnum = (typeof PaymentConsentScalarFieldEnum)[keyof typeof PaymentConsentScalarFieldEnum]
+
+
+export const SavedPaymentMethodScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  setupIntentId: 'setupIntentId',
+  consentId: 'consentId',
+  type: 'type',
+  brand: 'brand',
+  last4: 'last4',
+  expMonth: 'expMonth',
+  expYear: 'expYear',
+  billingName: 'billingName',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SavedPaymentMethodScalarFieldEnum = (typeof SavedPaymentMethodScalarFieldEnum)[keyof typeof SavedPaymentMethodScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -710,6 +982,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -879,6 +1158,9 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   purchase?: Prisma.PurchaseOmit
   stripeEvent?: Prisma.StripeEventOmit
+  stripeCustomer?: Prisma.StripeCustomerOmit
+  paymentConsent?: Prisma.PaymentConsentOmit
+  savedPaymentMethod?: Prisma.SavedPaymentMethodOmit
 }
 
 /* Types for Logging */

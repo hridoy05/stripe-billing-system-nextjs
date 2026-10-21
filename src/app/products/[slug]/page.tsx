@@ -5,6 +5,7 @@ import { startCheckout } from "@/app/actions/checkout";
 import { getSession } from "@/lib/session";
 import { getProductBySlug } from "@/lib/products";
 import { hasPurchase } from "@/lib/db";
+import { listSavedCards } from "@/lib/saved-payment-methods";
 import { BuyButton } from "./buy-button";
 
 type Props = {
@@ -22,6 +23,8 @@ async function ProductDetail({ params, searchParams }: Props) {
   const purchased = session
     ? await hasPurchase(session.userId, product.id)
     : false;
+  const savedCards =
+    session && !purchased ? await listSavedCards(session.userId) : [];
 
   const price = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -88,6 +91,18 @@ async function ProductDetail({ params, searchParams }: Props) {
                   </Link>{" "}
                   (Stripe Elements + PaymentIntent)
                 </p>
+                {savedCards.length > 0 ? (
+                  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                    or{" "}
+                    <Link
+                      href={`/checkout/saved/${product.slug}`}
+                      className="underline"
+                    >
+                      pay with a saved card
+                    </Link>{" "}
+                    ({savedCards.length} saved)
+                  </p>
+                ) : null}
               </>
             ) : (
               <Link

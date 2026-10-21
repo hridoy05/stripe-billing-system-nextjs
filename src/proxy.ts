@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifySessionToken } from "@/lib/session-token";
 
-const PROTECTED_ROUTES = ["/dashboard"];
+const PROTECTED_ROUTES = ["/dashboard", "/account", "/checkout/saved"];
 const PUBLIC_ROUTES = ["/", "/login"];
 
 export default function proxy(req: NextRequest) {

@@ -27,3 +27,18 @@ export type Purchase = Prisma.PurchaseModel
  * 
  */
 export type StripeEvent = Prisma.StripeEventModel
+/**
+ * Model StripeCustomer
+ * 
+ */
+export type StripeCustomer = Prisma.StripeCustomerModel
+/**
+ * Model PaymentConsent
+ * 
+ */
+export type PaymentConsent = Prisma.PaymentConsentModel
+/**
+ * Model SavedPaymentMethod
+ * 
+ */
+export type SavedPaymentMethod = Prisma.SavedPaymentMethodModel

@@ -24,6 +24,12 @@ async function PurchaseList() {
         <Link href="/products" className="font-semibold underline">
           Browse products
         </Link>
+        <Link
+          href="/account/payment-methods"
+          className="font-semibold underline"
+        >
+          Payment methods
+        </Link>
         <ul className="flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
           {PRODUCTS.map((product) => (
             <li key={product.id}>

@@ -10,4 +10,7 @@
  */
 export type * from './models/Purchase'
 export type * from './models/StripeEvent'
+export type * from './models/StripeCustomer'
+export type * from './models/PaymentConsent'
+export type * from './models/SavedPaymentMethod'
 export type * from './commonInputTypes'

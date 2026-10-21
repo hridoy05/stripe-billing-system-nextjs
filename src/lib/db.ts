@@ -161,3 +161,11 @@ export async function claimWebhookEvent(eventId: string): Promise<boolean> {
     throw error;
   }
 }
+
+/**
+ * Releases an event claim when processing failed so Stripe's retry can be
+ * processed instead of being mistaken for an already-handled duplicate.
+ */
+export async function releaseWebhookEvent(eventId: string): Promise<void> {
+  await prisma.stripeEvent.deleteMany({ where: { id: eventId } });
+}
