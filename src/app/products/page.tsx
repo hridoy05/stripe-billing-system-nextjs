@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
 import { PRODUCTS } from "@/lib/products";
-import { hasPurchase } from "@/lib/db";
+import { hasPurchase } from "@/lib/purchases";
 
 type ProductCardProps = {
   productId: string;

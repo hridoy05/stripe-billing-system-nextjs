@@ -3,7 +3,7 @@
 import {
   getPurchaseBySessionId,
   getPurchaseByPaymentIntent,
-} from "@/lib/db";
+} from "@/lib/purchases";
 
 export type PurchaseStatus = "pending" | "purchased";
 

@@ -100,32 +100,6 @@ export async function getSavedCardBySetupIntent(
   return row ? mapCard(row) : null;
 }
 
-export async function createPaymentConsent(input: {
-  id: string;
-  userId: string;
-  customerId: string;
-  setupIntentId: string;
-  consentVersion: string;
-  consentText: string;
-  allowOffSession: boolean;
-  ipAddress: string | null;
-  userAgent: string | null;
-}): Promise<void> {
-  await prisma.paymentConsent.create({
-    data: {
-      id: input.id,
-      userId: input.userId,
-      customerId: input.customerId,
-      setupIntentId: input.setupIntentId,
-      consentVersion: input.consentVersion,
-      consentText: input.consentText,
-      allowOffSession: input.allowOffSession,
-      ipAddress: input.ipAddress,
-      userAgent: input.userAgent,
-    },
-  });
-}
-
 async function setStripeDefaultPaymentMethod(
   stripeCustomerId: string,
   paymentMethodId: string | null

@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
-import type { SavedCard } from "@/lib/saved-payment-methods";
-import { payWithSavedCard } from "@/app/actions/saved-payment-methods";
-import { getPurchaseStatus } from "@/app/actions/purchases";
+import type { SavedCard } from "@/lib/saved-cards";
+import { payWithSavedCard } from "@/actions/saved-card-payments";
+import { getPurchaseStatus } from "@/actions/purchases";
+import {
+  cardBrandLabel,
+  formatCardExpiry,
+} from "@/lib/card-display";
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
@@ -17,11 +21,6 @@ type Phase =
   | { status: "verifying" }
   | { status: "purchased" }
   | { status: "error"; message: string };
-
-function brandLabel(brand: string | null): string {
-  if (!brand) return "Card";
-  return brand.charAt(0).toUpperCase() + brand.slice(1);
-}
 
 async function waitForPurchase(paymentIntentId: string): Promise<boolean> {
   const schedule = [...Array(10).fill(1000), ...Array(15).fill(3000)];
@@ -164,10 +163,7 @@ export function SavedCardForm({
       <fieldset disabled={busy} className="flex flex-col gap-3">
         <legend className="text-sm font-medium">Choose a saved card</legend>
         {cards.map((card) => {
-          const expiry =
-            card.expMonth && card.expYear
-              ? `${String(card.expMonth).padStart(2, "0")}/${card.expYear}`
-              : null;
+          const expiry = formatCardExpiry(card.expMonth, card.expYear);
           return (
             <label
               key={card.id}
@@ -183,7 +179,7 @@ export function SavedCardForm({
               />
               <span>
                 <span className="font-medium">
-                  {brandLabel(card.brand)}
+                  {cardBrandLabel(card.brand)}
                   {card.last4 ? ` •••• ${card.last4}` : ""}
                 </span>
                 {card.isDefault ? (

@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { logout } from "@/app/actions/auth";
+import { logout } from "@/actions/auth";
 import { getSession } from "@/lib/session";
 import { PRODUCTS } from "@/lib/products";
-import { listPurchasesForUser } from "@/lib/db";
+import { listPurchasesForUser } from "@/lib/purchases";
 
 async function PurchaseList() {
   const session = await getSession();

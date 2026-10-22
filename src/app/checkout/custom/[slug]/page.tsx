@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getProductBySlug } from "@/lib/products";
-import { hasPurchase } from "@/lib/db";
-import { CustomCheckout } from "./payment-form";
+import { hasPurchase } from "@/lib/purchases";
+import { CustomPaymentForm } from "@/components/checkout/custom-payment-form";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -42,7 +42,7 @@ async function CustomCheckoutPage({ params }: Props) {
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             {product.name} — {price}
           </p>
-          <CustomCheckout productId={product.id} />
+          <CustomPaymentForm productId={product.id} />
         </div>
       </main>
     </div>

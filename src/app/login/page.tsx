@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { LoginForm } from "./login-form";
+import { LoginForm } from "@/components/login-form";
 import { getSession } from "@/lib/session";
 
 async function AlreadySignedIn() {

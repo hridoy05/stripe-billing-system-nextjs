@@ -1,5 +1,4 @@
-import { Prisma } from "@/generated/prisma/client";
-import { prisma } from "@/lib/db";
+import { prisma, isUniqueConstraintViolation } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
 
 export type LocalStripeCustomer = {
@@ -21,13 +20,6 @@ function mapCustomer(row: {
     stripeCustomerId: row.stripeCustomerId,
     defaultPaymentMethodId: row.defaultPaymentMethodId,
   };
-}
-
-function isUniqueConstraintViolation(error: unknown): boolean {
-  return (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2002"
-  );
 }
 
 export async function getLocalCustomer(

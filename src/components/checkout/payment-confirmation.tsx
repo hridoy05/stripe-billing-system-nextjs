@@ -6,7 +6,7 @@ import {
   getPurchaseStatus,
   type PurchaseRef,
   type PurchaseStatus,
-} from "@/app/actions/purchases";
+} from "@/actions/purchases";
 
 export function PaymentConfirmation({
   purchaseRef,

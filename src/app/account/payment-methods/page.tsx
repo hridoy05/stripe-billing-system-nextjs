@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
-import { listSavedCards } from "@/lib/saved-payment-methods";
-import { PaymentMethodsManager } from "./payment-methods-manager";
+import { listSavedCards } from "@/lib/saved-cards";
+import { PaymentMethodsManager } from "@/components/payment-methods/payment-methods-manager";
 
 type Props = {
   searchParams: Promise<{ setup_intent?: string }>;

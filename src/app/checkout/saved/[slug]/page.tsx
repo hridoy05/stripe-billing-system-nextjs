@@ -3,9 +3,9 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getProductBySlug } from "@/lib/products";
-import { hasPurchase } from "@/lib/db";
-import { listSavedCards } from "@/lib/saved-payment-methods";
-import { SavedCardForm } from "./saved-card-form";
+import { hasPurchase } from "@/lib/purchases";
+import { listSavedCards } from "@/lib/saved-cards";
+import { SavedCardForm } from "@/components/checkout/saved-card-form";
 
 type Props = {
   params: Promise<{ slug: string }>;

@@ -7,8 +7,8 @@ import { getProduct } from "@/lib/products";
 import {
   getPurchaseBySessionId,
   getPurchaseByPaymentIntent,
-} from "@/lib/db";
-import { PaymentConfirmation } from "./payment-confirmation";
+} from "@/lib/purchases";
+import { PaymentConfirmation } from "@/components/checkout/payment-confirmation";
 
 type Props = {
   searchParams: Promise<{ session_id?: string; payment_intent?: string }>;

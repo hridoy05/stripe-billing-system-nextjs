@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { startCheckout } from "@/app/actions/checkout";
+import { startCheckout } from "@/actions/checkout";
 import { getSession } from "@/lib/session";
 import { getProductBySlug } from "@/lib/products";
-import { hasPurchase } from "@/lib/db";
-import { listSavedCards } from "@/lib/saved-payment-methods";
-import { BuyButton } from "./buy-button";
+import { hasPurchase } from "@/lib/purchases";
+import { listSavedCards } from "@/lib/saved-cards";
+import { BuyButton } from "@/components/products/buy-button";
 
 type Props = {
   params: Promise<{ slug: string }>;

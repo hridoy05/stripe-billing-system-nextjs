@@ -9,8 +9,8 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { createPaymentIntent } from "@/app/actions/payment";
-import { getPurchaseStatus, type PurchaseStatus } from "@/app/actions/purchases";
+import { createPaymentIntent } from "@/actions/payments";
+import { getPurchaseStatus, type PurchaseStatus } from "@/actions/purchases";
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
@@ -160,7 +160,7 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
   );
 }
 
-export function CustomCheckout({ productId }: { productId: string }) {
+export function CustomPaymentForm({ productId }: { productId: string }) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
